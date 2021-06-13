@@ -1,0 +1,11 @@
+go to http://www.speech.sri.com/projects/srilm/download.html and sign up for srilm download
+unzip the file
+in the unzipped folder go to the Makefile document
+change path from #SRILM = /home/srilm/ to SRILM = /home/iitp/srilm/
+make World
+export PATH=/home/iitp/srilm/bin
+
+cd ~/mosesdecoder
+./bjam --with-srilm=/home/iitp/srilm/
+
+

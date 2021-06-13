@@ -1,0 +1,40 @@
+
+
+#install nltk
+sudo apt-get install python-pip python-dev build-essential 
+sudo pip install --upgrade pip
+#Then to install NLTK through pip, enter
+sudo pip install -U numpy
+sudo pip install -U nltk
+#to check:
+python 
+import nltk
+nltk.download('all')
+
+#stanford parser
+wget https://nlp.stanford.edu/software/stanford-parser-full-2016-10-31.zip
+#then unzip
+
+#webhose-python
+git clone https://github.com/Buzzilla/webhose-python.git
+
+#php for wikipedia parsing
+
+sudo apt-get install build-essential libxml2-dev
+wget http://in1.php.net/distributions/php-5.3.29.tar.bz2
+tar -xvf php-5.3.29.tar.bz2
+cd php-5.3.29
+./configure
+make
+make test # Neither mandatory nor a bad idea.
+sudo make install
+  OR
+sudo apt-get update
+sudo apt-get install python-software-properties
+sudo apt-get update
+sudo apt-get install php5
+php5 -v
+
+
+
+

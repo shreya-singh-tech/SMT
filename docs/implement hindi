@@ -1,0 +1,25 @@
+#downlod wikipedia hindi dump from https://archive.org/download/hiwiki-20150217
+hiwiki-20150217-pages-articles-multistream.xml.bz2
+bzip2 -dk hiwiki-20170201-pages-articles-multistream.xml.bz2
+
+
+cd ~/wiki_process
+#make sure u have wikipedia2text
+
+cd wikipedia2text
+mkdir out-hi
+./xmldump2files.py ~/hiwiki-20150217-pages-articles-multistream.xml out-hi
+./wikiextract.py out-hi wikitexthi.txt
+
+git clone https://github.com/talha31093/Hindi-Parser--NLP-.git
+
+#download shallow parser http://ltrc.iiit.ac.in/showfile.php?filename=downloads/shallow_parser.php hindi version 4
+cd ~/Downloads
+#extract
+
+cd shallow-parser-hin-4.0.fc8
+echo "export SHALLOW_PARSER_HIN=~/Downloads/shallow_parser_hin-4.0.fc8" >> ~/.bashrc
+echo "export PATH=\$PATH:\$SHALLOW_PARSER_HIN/bin/sys/hin/" >> ~/.bashrc
+source ~/.bashrc
+make install
+

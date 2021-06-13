@@ -1,0 +1,6 @@
+cd ~/lang-models/news
+~/mosesdecoder/scripts/tokenizer/tokenizer.perl -l en <~/lang-models/news/eng_news.txt >~/lang-models/news/news.en.tok.txt
+~/mosesdecoder/scripts/recaser/truecase.perl --model ~/corpus/training.pretrue.en <~/lang-models/news/news.en.tok.txt >~/lang-models/news/news.en.true.txt
+~/srilm/bin/i686-m64/ngram-count -order 3 -interpolate -kndiscount -unk -text ~/lang-models/news/news.en.true.txt -lm ~/lang-models/news/news.en.lm
+~/mosesdecoder/bin/build_binary news.en.lm news.en.lm.binary
+

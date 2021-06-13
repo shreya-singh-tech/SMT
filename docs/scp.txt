@@ -1,0 +1,2 @@
+iit@iit-OptiPlex-780:~$ scp -r smt/ debajyoty.pcs13@172.16.1.122:/state/partition1/home/debajyoty.pcs13/pritesh
+

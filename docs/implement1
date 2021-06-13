@@ -1,0 +1,86 @@
+
+wget https://dumps.wikimedia.org/enwikisource/20170520/enwikisource-20170520-pages-articles-multistream.xml.bz2
+
+bzip2 -dk enwikisource-20170520-pages-articles-multistream.xml.bz2
+
+cd ~/wiki_process
+wget http://www.polishmywriting.com/download/wikipedia2text_rsm_mods.tgz
+tar zxvf wikipedia2text_rsm_mods.tgz
+cd wikipedia2text
+mkdir out
+./xmldump2files.py ~/enwikisource-20170520-pages-articles-multistream.xml out
+./wiki2xml_all.sh out
+./wikiextract.py out wikitext.txt
+
+#to clean the output wikipedia file use clean_wikitext.py and cleanwiki.py (present in check_include folder)
+python clean_wikitext.py > wiki_text.txt
+python cleanwiki.py >wiki_en_final.txt
+
+cd ~/final_lm
+#copy base_corpora,wiki_en_final.txt final_lm
+cat base_corpora wiki_en_final.txt  > phase_one
+
+#to clean diffrent corpora use programs present in clean corpus folder(present in check_include folder)
+
+#for cueword extraction after stanford parder is installed place tree_only.sh in the folder
+#place tree_only.sh in stanford parser folder
+#send it to tree_only.sh to get the tree
+#make sure u have java 8 and u extract all the files present inside stanford parser
+
+cd ~/Downloads/stanford-parser-full-2016-10-31
+./tree_only.sh ~/corpora/filename.tok.txt > ~/phase_two/tree.txt
+
+cd ~/phase_two
+python tree_to_str.py tree.txt > file_temp.txt
+rm tree.txt
+#to make cuewords
+python cueword_final.py file_temp.txt >file_cue.txt
+rm file_temp.txt
+#to filter cue word of length more than 6 words
+python filter.py file_cue.txt > cue.txt
+
+
+#to extract from webhose
+cd ~/phase_two
+#for webhose filter phrases pf length >6 and remove repetions
+mkdir filter_for webhose
+python filter_for_wehbose.py file_cue.txt > ~/phase_two/filter_for_webhose/cue.txt
+cd ~/webhose-python
+python crawl.py ~/phase_two/cue.txt
+
+#to extract specific pages from wikipedia
+cd ~/wiki-scrapper
+mkdir eng
+#change path accordingly in wiki_content_downloader.py
+python wiki_content_downloader.py ~/phase_two/cue.txt
+
+#to extract specific pages of webhose and wikipedia(i.e the ones related to content)
+#place to_check.py in the folders where pages whave been extracted (to_check is present in phase_two folder)
+cd ~/wiki-scrapper/eng
+python to_check.py ~/phase_two/cue.txt
+cat ~/wiki-scrapper/eng/*.txt > wikifiles
+python clean_wikitext.py >wikifiles.txt
+
+#for webhose first extract all pages in a file
+cd ~/webhose/corpus
+find . -type f -iname "*.txt" -print0 | xargs -0 mv -t ~/webhose-python/all_files
+#place to_check.py in all_files
+cd ../all_files
+python to_check.py ~/phase_two/cue.txt
+cd ~/webhose-python
+cat ~/webhose-python/all_files/*.txt >webhosefiles
+
+cd ~/final_lm
+#copy wikifiles.txt,webhosefiles in final_lm
+cat phase_one wikifiles.txt webhosefiles > phase_two.en
+~/mosesdecoder/scripts/tokenizer/tokenizer.perl -l en <~/final_lm/phase_two.en >~/final_lm/phase_two.en.tok
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,7 @@
+find . -type f -iname "*.txt" -print0 | xargs -0 mv -t ~/webhose-python/all_files
+
+#to delete empty text files
+find . -size  0 -print0 |xargs -0 rm 
+
+python to_check.py ~/phase_two/eng_health_cue.txt
+
